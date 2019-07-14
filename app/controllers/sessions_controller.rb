@@ -1,26 +1,26 @@
 class SessionsController < ApplicationController
-  # This is the action triggered by login link
   def create
-    # We don't sign in user with token which expired
+    # If a login token has expired, we don't log in the user
     user = User.where(login_token: params[:login_token])
               .where('login_token_valid_until > ?', Time.now).first
 
     if user
-      # Here we nullify login token so it can't be reused
+      # nullify the login token so it can't be used again
       user.update!(login_token: nil, login_token_valid_until: 1.year.ago)
 
-      # sorcery
+      # sorcery helper
       auto_login(user)
 
-      redirect_to root_path, notice: 'Signed-in sucesfully'
+      redirect_to root_path, notice: 'Congrats. You are signed in!'
     else
       redirect_to root_path, alert: 'Invalid or expired login link'
     end
   end
 
   def destroy
-    # sorcery
+    # sorcery helper
     logout
-    redirect_to root_path, notice: 'Sucesfully signed-out'
+
+    redirect_to root_path, notice: 'You are signed out'
   end
 end

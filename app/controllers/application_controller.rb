@@ -1,7 +1,6 @@
 class ApplicationController < ActionController::Base
-  # article
   def user_class
-    User
+    User  
   end
 
   def not_authenticated
